@@ -6,7 +6,7 @@
 /*   By: ishakuro <ishakuro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 12:39:36 by ishakuro          #+#    #+#             */
-/*   Updated: 2021/12/08 18:06:16 by ishakuro         ###   ########.fr       */
+/*   Updated: 2021/12/21 12:32:40 by ishakuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,15 @@ int	get_next_line(const int fd, char **line)
 
 	if (fd < 0 || line == NULL || fd >= FD_COUNT)
 		return (-1);
-	buf_len = read(fd, buff, BUFF_SIZE);
-	while (buf_len > 0)
+	buf_len = 1;
+	while (buf_len > 0 && (!prev[fd] || !ft_strchr(prev[fd], '\n')))
 	{
+		buf_len = read(fd, buff, BUFF_SIZE);
 		buff[buf_len] = '\0';
 		if (!prev[fd])
 			prev[fd] = ft_strdup(buff);
 		else
 			join_and_free(&prev[fd], buff);
-		if (ft_strchr(buff, '\n'))
-			break ;
-		buf_len = read(fd, buff, BUFF_SIZE);
 	}
 	return (return_value(&prev[fd], buf_len, line));
 }
